@@ -6,7 +6,7 @@ from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping, LearningRateLogger
 from pytorch_lightning.loggers import TensorBoardLogger
 
-from model import BertClassficationModel
+from model import BertClassificationModel
 
 
 FLAGS = flags.FLAGS
@@ -32,11 +32,11 @@ flags.DEFINE_float('lr', default=2e-5,
 def main(argv):
     if FLAGS.model == 'BERT':
         tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
-        model = BertClassficationModel(input_path=FLAGS.input_path,
-                                       tokenizer=tokenizer,
-                                       batch_size=FLAGS.batch_size,
-                                       num_workers=FLAGS.num_workers,
-                                       lr=FLAGS.lr)
+        model = BertClassificationModel(input_path=FLAGS.input_path,
+                                        tokenizer=tokenizer,
+                                        batch_size=FLAGS.batch_size,
+                                        num_workers=FLAGS.num_workers,
+                                        lr=FLAGS.lr)
 
     seed_everything(42)
 

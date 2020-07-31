@@ -13,7 +13,7 @@ from transformers import AdamW
 from dataset.bert_dataset import BertDataset
 
 
-class BertClassficationModel(LightningModule):
+class BertClassificationModel(LightningModule):
     def __init__(self,
                  input_path: str = None,
                  tokenizer: Any = None,
@@ -22,7 +22,7 @@ class BertClassficationModel(LightningModule):
                  batch_size: int = 4,
                  num_workers: int = 0,
                  lr: float = 2e-5):
-        super(BertClassficationModel, self).__init__()
+        super(BertClassificationModel, self).__init__()
 
         self.num_classes = num_classes
         self.cuda_device = cuda_device
