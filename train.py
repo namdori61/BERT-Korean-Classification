@@ -5,8 +5,11 @@ from transformers import BertTokenizer
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping, LearningRateLogger
 from pytorch_lightning.loggers import TensorBoardLogger
+import gluonnlp as nlp
+from kobert.utils import get_tokenizer
+from kobert.pytorch_kobert import get_pytorch_kobert_model
 
-from model import BertClassificationModel
+from model import BertClassificationModel, KoBertClassficationModel
 
 
 FLAGS = flags.FLAGS
@@ -37,6 +40,15 @@ def main(argv):
                                         batch_size=FLAGS.batch_size,
                                         num_workers=FLAGS.num_workers,
                                         lr=FLAGS.lr)
+    elif FLAGS.model == 'KoBERT':
+        bertmodel, vocab = get_pytorch_kobert_model()
+        tokenizer = nlp.data.BERTSPTokenizer(get_tokenizer(), vocab, lower=False)
+        model = KoBertClassficationModel(input_path=FLAGS.input_path,
+                                         model=bertmodel,
+                                         tokenizer=tokenizer,
+                                         batch_size=FLAGS.batch_size,
+                                         num_workers=FLAGS.num_workers,
+                                         lr=FLAGS.lr)
 
     seed_everything(42)
 
