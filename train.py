@@ -34,6 +34,8 @@ flags.DEFINE_float('lr', default=2e-5,
                    help='If given, uses this learning rate in training')
 flags.DEFINE_float('weight_decay', default=0.1,
                    help='If given, uses this weight decay in training')
+flags.DEFINE_float('warm_up', default=0.1,
+                   help='If given, uses this warm up in training')
 
 
 def main(argv):
@@ -45,7 +47,8 @@ def main(argv):
                                         batch_size=FLAGS.batch_size,
                                         num_workers=FLAGS.num_workers,
                                         lr=FLAGS.lr,
-                                        weight_decay=FLAGS.weight_decay)
+                                        weight_decay=FLAGS.weight_decay,
+                                        warm_up=FLAGS.warm_up)
     elif FLAGS.model == 'KoBERT':
         bertmodel, vocab = get_pytorch_kobert_model()
         tokenizer = nlp.data.BERTSPTokenizer(get_tokenizer(), vocab, lower=False)
@@ -55,7 +58,8 @@ def main(argv):
                                          batch_size=FLAGS.batch_size,
                                          num_workers=FLAGS.num_workers,
                                          lr=FLAGS.lr,
-                                         weight_decay=FLAGS.weight_decay)
+                                         weight_decay=FLAGS.weight_decay,
+                                         warm_up=FLAGS.warm_up)
     elif FLAGS.model == 'KcBERT':
         tokenizer = BertTokenizer.from_pretrained('beomi/kcbert-base')
         model = BertClassificationModel(input_path=FLAGS.input_path,
@@ -64,7 +68,8 @@ def main(argv):
                                         batch_size=FLAGS.batch_size,
                                         num_workers=FLAGS.num_workers,
                                         lr=FLAGS.lr,
-                                        weight_decay=FLAGS.weight_decay)
+                                        weight_decay=FLAGS.weight_decay,
+                                        warm_up=FLAGS.warm_up)
     else:
         raise ValueError('Unknown model type')
 

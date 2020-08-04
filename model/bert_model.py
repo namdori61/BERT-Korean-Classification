@@ -23,7 +23,8 @@ class BertClassificationModel(LightningModule):
                  batch_size: int = 4,
                  num_workers: int = 0,
                  lr: float = 2e-5,
-                 weight_decay: float = 0.1):
+                 weight_decay: float = 0.1,
+                 warm_up: float = 0.1):
         super(BertClassificationModel, self).__init__()
 
         self.num_classes = num_classes
@@ -32,6 +33,7 @@ class BertClassificationModel(LightningModule):
         self.num_workers = num_workers
         self.lr = lr
         self.weight_decay = weight_decay
+        self.warm_up = warm_up
 
         self.save_hyperparameters()
 
@@ -101,7 +103,7 @@ class BertClassificationModel(LightningModule):
                           eps=1e-8)
 
         scheduler = get_linear_schedule_with_warmup(optimizer,
-                                                    num_warmup_steps=int(0.1 * self.trainer.global_step),
+                                                    num_warmup_steps=int(self.warm_up * self.trainer.global_step),
                                                     num_training_steps=self.trainer.global_step)
 
         return [optimizer], [scheduler]
