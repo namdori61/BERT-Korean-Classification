@@ -36,6 +36,7 @@ def main(argv):
     if FLAGS.model == 'BERT':
         tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
         model = BertClassificationModel(input_path=FLAGS.input_path,
+                                        model='bert-base-multilingual-cased',
                                         tokenizer=tokenizer,
                                         batch_size=FLAGS.batch_size,
                                         num_workers=FLAGS.num_workers,
@@ -49,6 +50,16 @@ def main(argv):
                                          batch_size=FLAGS.batch_size,
                                          num_workers=FLAGS.num_workers,
                                          lr=FLAGS.lr)
+    elif FLAGS.model == 'KcBERT':
+        tokenizer = BertTokenizer.from_pretrained('beomi/kcbert-base')
+        model = BertClassificationModel(input_path=FLAGS.input_path,
+                                        model='beomi/kcbert-base',
+                                        tokenizer=tokenizer,
+                                        batch_size=FLAGS.batch_size,
+                                        num_workers=FLAGS.num_workers,
+                                        lr=FLAGS.lr)
+    else:
+        raise ValueError('Unknown model type')
 
     seed_everything(42)
 

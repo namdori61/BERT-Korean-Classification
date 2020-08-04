@@ -3,7 +3,6 @@ from typing import Any, Tuple, Dict, Union, List, Optional, Sequence
 import torch
 from torch import nn, Tensor
 from torch.optim import Optimizer
-from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data import DataLoader, RandomSampler, DistributedSampler, random_split
 from torch.nn import CrossEntropyLoss
 from pytorch_lightning.core.lightning import LightningModule
@@ -17,6 +16,7 @@ from dataset.bert_dataset import BertDataset
 class BertClassificationModel(LightningModule):
     def __init__(self,
                  input_path: str = None,
+                 model: str = None,
                  tokenizer: Any = None,
                  num_classes: int = 2,
                  cuda_device: int = 0,
@@ -35,7 +35,7 @@ class BertClassificationModel(LightningModule):
 
         self.dataset = BertDataset(input_path, tokenizer)
 
-        self.text_embedding = BertModel.from_pretrained('bert-base-multilingual-cased',
+        self.text_embedding = BertModel.from_pretrained(model,
                                                         output_attentions=False,
                                                         output_hidden_states=True)
 
