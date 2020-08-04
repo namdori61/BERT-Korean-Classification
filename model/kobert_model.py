@@ -8,7 +8,7 @@ from torch.nn import CrossEntropyLoss
 from pytorch_lightning.core.lightning import LightningModule
 from pytorch_lightning.metrics.functional import accuracy, precision, recall
 from transformers.modeling_bert import BertModel
-from transformers import AdamW, get_linear_schedule_with_warmup
+from transformers import AdamW
 
 from dataset.kobert_dataset import KoBertDataset
 
@@ -24,7 +24,7 @@ class KoBertClassficationModel(LightningModule):
                  num_workers: int = 0,
                  lr: float = 2e-5,
                  weight_decay: float = 0.1,
-                 warm_up: float = 0.1):
+                 warm_up: int = 500):
         super(KoBertClassficationModel, self).__init__()
 
         self.num_classes = num_classes
@@ -101,12 +101,19 @@ class KoBertClassficationModel(LightningModule):
         optimizer = AdamW(optimizer_grouped_parameters,
                           lr=self.lr,
                           eps=1e-8)
+        return optimizer
 
-        scheduler = get_linear_schedule_with_warmup(optimizer,
-                                                    num_warmup_steps=int(self.warm_up * self.trainer.global_step),
-                                                    num_training_steps=self.trainer.global_step)
+    def optimizer_step(self, epoch, batch_idx, optimizer, optimizer_idx, second_order_closure=None,
+                       on_tpu=False, using_native_amp=False, using_lbfgs=False):
+        # warm up lr
+        if self.trainer.global_step < self.warm_up:
+            lr_scale = min(1., float(self.trainer.global_step + 1) / float(self.warm_up))
+            for pg in optimizer.param_groups:
+                pg['lr'] = lr_scale * self.lr
 
-        return [optimizer], [scheduler]
+        # update params
+        optimizer.step()
+        optimizer.zero_grad()
 
     def training_step(self, batch, batch_idx) -> Union[
         int, Dict[
