@@ -40,10 +40,10 @@ class KoBertDataset(Dataset):
         for line in tqdm(self.dataset, desc='Processing'):
             data = json.loads(line)
             processed_data = {}
-            if data['document'] != '':
-                encoded_data = transform(data['document'])
-            else:
-                encoded_data = transform(' ')
+            try:
+                encoded_data = transform([data['document']])
+            except:
+                encoded_data = transform([' '])
             processed_data['input_ids'] = torch.LongTensor(encoded_data[0])
             processed_data['attention_mask'] = gen_attention_mask(processed_data['input_ids'], encoded_data[1])
 
