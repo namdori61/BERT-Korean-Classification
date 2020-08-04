@@ -32,6 +32,8 @@ flags.DEFINE_integer('num_workers', default=0,
                      help='If given, uses this number of workers in data loading')
 flags.DEFINE_float('lr', default=2e-5,
                    help='If given, uses this learning rate in training')
+flags.DEFINE_float('weight_decay', default=0.1,
+                   help='If given, uses this weight decay in training')
 
 
 def main(argv):
@@ -42,7 +44,8 @@ def main(argv):
                                         tokenizer=tokenizer,
                                         batch_size=FLAGS.batch_size,
                                         num_workers=FLAGS.num_workers,
-                                        lr=FLAGS.lr)
+                                        lr=FLAGS.lr,
+                                        weight_decay=FLAGS.weight_decay)
     elif FLAGS.model == 'KoBERT':
         bertmodel, vocab = get_pytorch_kobert_model()
         tokenizer = nlp.data.BERTSPTokenizer(get_tokenizer(), vocab, lower=False)
@@ -51,7 +54,8 @@ def main(argv):
                                          tokenizer=tokenizer,
                                          batch_size=FLAGS.batch_size,
                                          num_workers=FLAGS.num_workers,
-                                         lr=FLAGS.lr)
+                                         lr=FLAGS.lr,
+                                         weight_decay=FLAGS.weight_decay)
     elif FLAGS.model == 'KcBERT':
         tokenizer = BertTokenizer.from_pretrained('beomi/kcbert-base')
         model = BertClassificationModel(input_path=FLAGS.input_path,
@@ -59,7 +63,8 @@ def main(argv):
                                         tokenizer=tokenizer,
                                         batch_size=FLAGS.batch_size,
                                         num_workers=FLAGS.num_workers,
-                                        lr=FLAGS.lr)
+                                        lr=FLAGS.lr,
+                                        weight_decay=FLAGS.weight_decay)
     else:
         raise ValueError('Unknown model type')
 
