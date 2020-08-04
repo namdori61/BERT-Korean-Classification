@@ -34,8 +34,8 @@ flags.DEFINE_float('lr', default=2e-5,
                    help='If given, uses this learning rate in training')
 flags.DEFINE_float('weight_decay', default=0.1,
                    help='If given, uses this weight decay in training')
-flags.DEFINE_float('warm_up', default=500,
-                   help='If given, uses this warm up in training')
+flags.DEFINE_integer('warm_up', default=500,
+                     help='If given, uses this warm up in training')
 
 
 def main(argv):
