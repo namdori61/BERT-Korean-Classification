@@ -108,8 +108,10 @@ class KoBertClassficationModel(LightningModule):
         # warm up lr
         if self.trainer.global_step < self.warm_up:
             lr_scale = min(1., float(self.trainer.global_step + 1) / float(self.warm_up))
-            for pg in optimizer.param_groups:
-                pg['lr'] = lr_scale * self.lr
+        else:
+            lr_scale = min(1., float(self.warm_up) / float(self.trainer.global_step + 1))
+        for pg in optimizer.param_groups:
+            pg['lr'] = lr_scale * self.lr
 
         # update params
         optimizer.step()
