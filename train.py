@@ -20,6 +20,8 @@ flags.DEFINE_string('model', default=None,
                     help='Model to train (BERT, KoBERT)')
 flags.DEFINE_string('save_dir', default=None,
                     help='Path to save model')
+flags.DEFINE_string('version', default=None,
+                    help='Explain experiment version')
 flags.DEFINE_integer('cuda_device', default=0,
                      help='If given, uses this CUDA device in training')
 flags.DEFINE_integer('max_epochs', default=10,
@@ -80,7 +82,8 @@ def main(argv):
 
     logger = TensorBoardLogger(
         save_dir=FLAGS.save_dir,
-        name='logs'
+        name='logs_' + FLAGS.model,
+        version=FLAGS.version
     )
     lr_logger = LearningRateLogger()
 
