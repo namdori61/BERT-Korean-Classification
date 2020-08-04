@@ -8,7 +8,7 @@ from torch.nn import CrossEntropyLoss
 from pytorch_lightning.core.lightning import LightningModule
 from pytorch_lightning.metrics.functional import accuracy, precision, recall
 from transformers.modeling_bert import BertModel
-from transformers import AdamW
+from transformers import AdamW, get_linear_schedule_with_warmup
 
 from dataset.kobert_dataset import KoBertDataset
 
@@ -88,22 +88,21 @@ class KoBertClassficationModel(LightningModule):
             Optimizer, Sequence[Optimizer], Dict, Sequence[Dict], Tuple[List, List]
         ]
     ]:
-        optimizer = AdamW(self.parameters(),
+        no_decay = ['bias', 'LayerNorm.weight']
+        optimizer_grouped_parameters = [
+            {'params': [p for n, p in self.named_parameters() if not any(nd in n for nd in no_decay)],
+             'weight_decay': 0.01},
+            {'params': [p for n, p in self.named_parameters() if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
+        ]
+        optimizer = AdamW(optimizer_grouped_parameters,
                           lr=self.lr,
                           eps=1e-8)
-        return optimizer
 
-    def optimizer_step(self, epoch, batch_idx, optimizer, optimizer_idx, second_order_closure=None,
-                       on_tpu=False, using_native_amp=False, using_lbfgs=False):
-        # warm up lr
-        if self.trainer.global_step < 500:
-            lr_scale = min(1., float(self.trainer.global_step + 1) / 500.)
-            for pg in optimizer.param_groups:
-                pg['lr'] = lr_scale * self.lr
+        scheduler = get_linear_schedule_with_warmup(optimizer,
+                                                    num_warmup_steps=int(0.1 * self.trainer.global_step),
+                                                    num_training_steps=self.trainer.global_step)
 
-        # update params
-        optimizer.step()
-        optimizer.zero_grad()
+        return [optimizer], [scheduler]
 
     def training_step(self, batch, batch_idx) -> Union[
         int, Dict[
