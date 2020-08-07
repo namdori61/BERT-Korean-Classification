@@ -30,11 +30,12 @@ Naver sentiment movie corpus v1.0 : https://github.com/e9t/nsmc
 | :-------------: | :-------------: | :-------------: | :-------------: |
 | BERT-multilingual | 2 | 0.851 | 0.3354 |
 | SKT KoBERT | 2 | 0.8919 | 0.2624 |
-| Beomi's KcBERT | 2 | 0.8961 | 0.2548 |
+| Beomi's KcBERT base | 2 | 0.8961 | 0.2548 |
+| Beomi's KcBERT large | 2 | 0.9099 | 0.2328 |
 
-![validation accuracy](https://user-images.githubusercontent.com/20228736/89353708-f428d300-d6f1-11ea-8e97-e60a45f52ccd.png)
+![validation accuracy](https://user-images.githubusercontent.com/20228736/89636438-9825a080-d8e3-11ea-93f7-fe1b3f1bb1d5.png)
 
-![validation loss](https://user-images.githubusercontent.com/20228736/89353694-e96e3e00-d6f1-11ea-88e7-fd30a5400251.png)
+![validation loss](https://user-images.githubusercontent.com/20228736/89636480-aa074380-d8e3-11ea-9962-37fbcdb7d8b8.png)
  
  ## Lessons learned
  1. Transformer 기반 크기가 큰 모델에서 warm-up learning rate scheduling 은 학습에 매우! 중요하다! 이거로 loss가 수렴하냐 안하냐를 결정지음.
