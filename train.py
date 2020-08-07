@@ -61,9 +61,9 @@ def main(argv):
                                          weight_decay=FLAGS.weight_decay,
                                          warm_up=FLAGS.warm_up)
     elif FLAGS.model == 'KcBERT':
-        tokenizer = BertTokenizer.from_pretrained('beomi/kcbert-base')
+        tokenizer = BertTokenizer.from_pretrained('beomi/kcbert-large')
         model = BertClassificationModel(input_path=FLAGS.input_path,
-                                        model='beomi/kcbert-base',
+                                        model='beomi/kcbert-large',
                                         tokenizer=tokenizer,
                                         batch_size=FLAGS.batch_size,
                                         num_workers=FLAGS.num_workers,
