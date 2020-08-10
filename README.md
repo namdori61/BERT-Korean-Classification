@@ -4,6 +4,8 @@ Various Korean BERTs classification experiment to NSMC (Naver sentiment movie co
 ## Goal
 NSMC 데이터셋을 이용하여, 한국어 관련 3가지 BERT의 Binary Classification (Sentiment Analysis) 성능 비교해보기
 
+(개인적인 공부 목적으로 여러 모델을 실험해 본 것이고, 각 모델을 평가하려는 목적은 전혀 없습니다.)
+
 ## Dataset
 Naver sentiment movie corpus v1.0 : https://github.com/e9t/nsmc
 
