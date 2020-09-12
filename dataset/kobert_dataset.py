@@ -14,7 +14,7 @@ class KoBertDataset(Dataset):
     def __init__(self,
                  file_path: str = None,
                  tokenizer: Any = None,
-                 max_lenth: int = 140):
+                 max_length: int = 140):
 
         logger.info(f'Reading file at {file_path}')
 
@@ -27,7 +27,7 @@ class KoBertDataset(Dataset):
         self.processed_dataset = []
 
         transform = nlp.data.BERTSentenceTransform(tokenizer=tokenizer,
-                                                   max_seq_length=max_lenth,
+                                                   max_seq_length=max_length,
                                                    pad=True,
                                                    pair=False)
 

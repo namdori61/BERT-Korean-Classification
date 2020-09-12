@@ -13,7 +13,7 @@ class BertDataset(Dataset):
     def __init__(self,
                  file_path: str = None,
                  tokenizer: Any = None,
-                 max_lenth: int = 140):
+                 max_length: int = 140):
 
         logger.info(f'Reading file at {file_path}')
 
@@ -29,7 +29,7 @@ class BertDataset(Dataset):
             processed_data = {}
             encoded_dict = tokenizer.encode_plus(data['document'],
                                                  add_special_tokens=True,
-                                                 max_length=max_lenth,
+                                                 max_length=max_length,
                                                  truncation=True,
                                                  pad_to_max_length=True,
                                                  return_attention_mask=True,
