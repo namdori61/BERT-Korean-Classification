@@ -1,4 +1,6 @@
+from typing import Union
 from absl import app, flags, logging
+from configparser import ConfigParser
 
 import torch
 from transformers import BertTokenizer
@@ -8,6 +10,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 import gluonnlp as nlp
 from kobert.utils import get_tokenizer
 from kobert.pytorch_kobert import get_pytorch_kobert_model
+from knockknock import telegram_sender
 
 from model import BertClassificationModel, KoBertClassficationModel
 
@@ -36,6 +39,8 @@ flags.DEFINE_float('weight_decay', default=0.1,
                    help='If given, uses this weight decay in training')
 flags.DEFINE_integer('warm_up', default=500,
                      help='If given, uses this warm up in training')
+flags.DEFINE_string('config_path', default=None,
+                    help='Path to the config file')
 
 
 def main(argv):
@@ -97,6 +102,15 @@ def main(argv):
     )
     lr_monitor = LearningRateMonitor(logging_interval='step')
 
+    parser = ConfigParser()
+    parser.read(FLAGS.config_path)
+
+    @telegram_sender(token=parser.get('telegram', 'token'),
+                     chat_id=parser.get('telegram', 'chat_id'))
+    def train_notify(trainer: Trainer = None,
+                     model: Union[BertClassificationModel, KoBertClassficationModel] = None) -> None:
+        trainer.fit(model)
+
     if FLAGS.cuda_device > 1:
         trainer = Trainer(deterministic=True,
                           gpus=FLAGS.cuda_device,
@@ -128,7 +142,8 @@ def main(argv):
                           logger=logger,
                           callbacks=[lr_monitor])
         logging.info('No GPU available, using the CPU instead.')
-    trainer.fit(model)
+    train_notify(trainer=trainer,
+                 model=model)
 
 
 if __name__ == '__main__':
