@@ -31,7 +31,7 @@ class BertDataset(Dataset):
                                                  add_special_tokens=True,
                                                  max_length=max_length,
                                                  truncation=True,
-                                                 pad_to_max_length=True,
+                                                 padding='longest',
                                                  return_attention_mask=True,
                                                  return_tensors='pt'
                                                  )
