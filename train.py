@@ -102,8 +102,9 @@ def main(argv):
     )
     lr_monitor = LearningRateMonitor(logging_interval='step')
 
-    parser = ConfigParser()
-    parser.read(FLAGS.config_path)
+    if FLAGS.config_path is not None:
+        parser = ConfigParser()
+        parser.read(FLAGS.config_path)
 
     @telegram_sender(token=parser.get('telegram', 'token'),
                      chat_id=parser.get('telegram', 'chat_id'))
@@ -142,8 +143,11 @@ def main(argv):
                           logger=logger,
                           callbacks=[lr_monitor])
         logging.info('No GPU available, using the CPU instead.')
-    train_notify(trainer=trainer,
-                 model=model)
+    if FLAGS.config_path is not None:
+        train_notify(trainer=trainer,
+                     model=model)
+    else:
+        trainer.fit(model)
 
 
 if __name__ == '__main__':
