@@ -3,7 +3,7 @@ from absl import app, flags, logging
 import torch
 from transformers import BertTokenizer
 from pytorch_lightning import Trainer, seed_everything
-from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping, LearningRateLogger
+from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping, LearningRateMonitor
 from pytorch_lightning.loggers import TensorBoardLogger
 import gluonnlp as nlp
 from kobert.utils import get_tokenizer
@@ -95,7 +95,7 @@ def main(argv):
         name='logs_' + FLAGS.model,
         version=FLAGS.version
     )
-    lr_logger = LearningRateLogger()
+    lr_monitor = LearningRateMonitor(logging_interval='step')
 
     if FLAGS.cuda_device > 1:
         trainer = Trainer(deterministic=True,
@@ -106,7 +106,7 @@ def main(argv):
                           early_stop_callback=early_stop,
                           max_epochs=FLAGS.max_epochs,
                           logger=logger,
-                          callbacks=[lr_logger])
+                          callbacks=[lr_monitor])
         logging.info(f'There are {torch.cuda.device_count()} GPU(s) available.')
         logging.info(f'Use the number of GPU: {FLAGS.cuda_device}')
     elif FLAGS.cuda_device == 1:
@@ -117,7 +117,7 @@ def main(argv):
                           early_stop_callback=early_stop,
                           max_epochs=FLAGS.max_epochs,
                           logger=logger,
-                          callbacks=[lr_logger])
+                          callbacks=[lr_monitor])
         logging.info(f'There are {torch.cuda.device_count()} GPU(s) available.')
         logging.info(f'Use the number of GPU: {FLAGS.cuda_device}')
     else:
@@ -126,7 +126,7 @@ def main(argv):
                           early_stop_callback=early_stop,
                           max_epochs=FLAGS.max_epochs,
                           logger=logger,
-                          callbacks=[lr_logger])
+                          callbacks=[lr_monitor])
         logging.info('No GPU available, using the CPU instead.')
     trainer.fit(model)
 
