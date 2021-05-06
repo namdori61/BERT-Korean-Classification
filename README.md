@@ -23,9 +23,9 @@ Naver sentiment movie corpus v1.0 : https://github.com/e9t/nsmc
 ## How to execute codes
  - `Preprocess: python preprocess.py --input_path INPUT_PATH(txt file) --output_path OUTPUT_PATH(jsonl file)`
  - `Train: python train.py --input_path INPUT_PATH(jsonl file) --config_path CONFIG_PATH(ini file)
- --model BERT [BERT, KoBERT, KcBERT] --version lr_LR_wm_WARMUP_WEIGHTDECAY --lr LR --warm_up WARMUP
+ --model BERT [BERT, KoBERT, KcBERT] --version lr_LR_wm_WARMUP_WEIGHTDECAY --lr LEARNING_RATE --warm_up WARMUP
  --weight_decay WEIGHTDECAY --cuda_device GPU_NUM --max_epochs MAX_EPOCHS --save_dir SAVE_DIR
- --batch_size BATCH_SIZE --lr LEARNING_RATE --num_workers NUM_WORKERS`
+ --batch_size BATCH_SIZE --num_workers NUM_WORKERS`
  
  ## Performances (Validation)
  
